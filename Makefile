@@ -3,7 +3,7 @@ all: run clean
 .PHONY: all
 
 build:
-	@g++ main.cpp -o build/spell-checker
+	@g++ src/main.cpp src/Trie.cpp -o build/spell-checker
 
 .PHONY: build
 
