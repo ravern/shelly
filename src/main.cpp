@@ -51,6 +51,35 @@ void spellCheckWord(Trie *dict) {
   cout << endl;
 }
 
+// Spell checks an entire file.
+bool spellCheckFile(Trie *dict) {
+  cout << "Enter the path to your file: ";
+
+  string path;
+  cin >> path;
+
+  ifstream input;
+  input.open(path);
+
+  if (!input.is_open()) {
+    return false;
+  }
+
+  cout << "Listing wrongly spelled words..." << endl;
+
+  string word;
+  while (!input.eof()) {
+    getline(input, word);
+    if (!dict->find(word)) {
+      cout << word << endl;
+    }
+  }
+
+  cout << endl;
+
+  return true;
+}
+
 int main() {
   Trie *dict = new Trie();
 
@@ -73,6 +102,10 @@ int main() {
       spellCheckWord(dict);
       break;
     case 2:
+      if (!spellCheckFile(dict)) {
+        cout << "Error: Failed to load input!" << endl;
+        return 1;
+      }
       break;
     default:
       return 0;
