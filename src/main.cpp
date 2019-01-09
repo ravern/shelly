@@ -31,6 +31,7 @@ void printMainMenu() {
   cout << endl;
   cout << " [1] Spell check a word" << endl;
   cout << " [2] Spell check a file" << endl;
+  cout << " [3] Add a new word" << endl;
   cout << " [0] Exit" << endl;
   cout << endl;
 }
@@ -80,6 +81,17 @@ bool spellCheckFile(Trie *dict) {
   return true;
 }
 
+void addWord(Trie *dict) {
+  cout << "Enter your word: ";
+
+  string word;
+  cin >> word;
+
+  dict->push(word);
+
+  cout << endl;
+}
+
 int main() {
   Trie *dict = new Trie();
 
@@ -106,6 +118,9 @@ int main() {
         cout << "Error: Failed to load input!" << endl;
         return 1;
       }
+      break;
+    case 3:
+      addWord(dict);
       break;
     default:
       return 0;
