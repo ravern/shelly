@@ -11,9 +11,18 @@ class TrieNodeList;
 // undefined.
 class Trie {
 public:
+  // Creates an empty trie.
   Trie();
+
+  // Finds the word within the trie, only returning true if the exact word
+  // had been added into the trie.
   bool find(string word);
+
+  // Adds a new word into the trie.
   void push(string word);
+
+  // Outputs debug information about the trie.
+  void debug();
 
 private:
   TrieNodeList *roots;
@@ -28,19 +37,32 @@ struct TrieNode {
 // Represents a list of nodes within a trie.
 class TrieNodeList {
 public:
-  int length;
-
+  // Creates the list with the default initial capacity.
   TrieNodeList();
+
+  // Creates the list with a non-default initial capacity.
   TrieNodeList(int capacity);
+
+  // Returns whether the list is empty.
   bool isEmpty();
+
+  // Returns the length of the list.
   int getLength();
+
+  // Pushes a new node into the list.
   void push(TrieNode node);
+
+  // Returns the node at the given index of the list.
   TrieNode get(int i);
+
+  // Outputs debug information about the list.
   void debug();
 
 private:
+  int length;
   int capacity;
   TrieNode *nodes;
 
+  // Grows the list to twice the original capacity.
   void grow();
 };
