@@ -36,7 +36,13 @@ vector<string> _getWords(vector<TrieNode> *children) {
   return words;
 }
 
-vector<string> Trie::getWords() { return _getWords(this->roots); }
+vector<string> Trie::getWords() {
+  vector<string> words = _getWords(this->roots);
+  for (int i = 0; i < words.size(); i++) {
+    words[i] = words[i].substr(0, words[i].length() - 1);
+  }
+  return words;
+}
 
 bool _find(vector<TrieNode> *children, string word) {
   if (word.empty()) {
