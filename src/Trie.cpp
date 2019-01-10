@@ -4,21 +4,47 @@
 
 using namespace std;
 
-#define DEFAULT_CAPACITY 2
+Trie::Trie() { this->roots = new vector<TrieNode>(); }
 
-Trie::Trie() { this->roots = new TrieNodeList(26); }
+vector<string> _getWords(vector<TrieNode> *children) {
+  vector<string> words;
 
-int Trie::getLength() { return this->length; }
+  for (int i = 0; i < children->size(); i++) {
+    TrieNode child = (*children)[i];
 
-vector<string> Trie::getWords() { return this->words; }
+    // Skip the endings.
+    if (child.value == '\1') {
+      continue;
+    }
 
-bool _find(TrieNodeList *children, string word) {
+    // If the child has a child that is an ending, add itself to the list.
+    for (int j = 0; j < child.children->size(); j++) {
+      if ((*child.children)[j].value == '\1') {
+        string word = "";
+        words.push_back(child.value + word);
+      }
+    }
+
+    // Also add all of the child words.
+    vector<string> childWords = _getWords(child.children);
+    for (int j = 0; j < childWords.size(); j++) {
+      string childWord = childWords[j];
+      words.push_back(child.value + childWord);
+    }
+  }
+
+  return words;
+}
+
+vector<string> Trie::getWords() { return _getWords(this->roots); }
+
+bool _find(vector<TrieNode> *children, string word) {
   if (word.empty()) {
     return true;
   }
 
-  for (int i = 0; i < children->getLength(); i++) {
-    TrieNode child = children->get(i);
+  for (int i = 0; i < children->size(); i++) {
+    TrieNode child = (*children)[i];
     if (word[0] == child.value) {
       return _find(child.children, word.substr(1));
     }
@@ -32,13 +58,13 @@ bool Trie::find(string word) {
   return _find(this->roots, word + "\1");
 }
 
-void _push(TrieNodeList *children, string word) {
+void _push(vector<TrieNode> *children, string word) {
   if (word.empty()) {
     return;
   }
 
-  for (int i = 0; i < children->getLength(); i++) {
-    TrieNode child = children->get(i);
+  for (int i = 0; i < children->size(); i++) {
+    TrieNode child = (*children)[i];
     if (word[0] == child.value) {
       _push(child.children, word.substr(1));
       return;
@@ -47,64 +73,12 @@ void _push(TrieNodeList *children, string word) {
 
   TrieNode child;
   child.value = word[0];
-  child.children = new TrieNodeList();
-  children->push(child);
+  child.children = new vector<TrieNode>();
+  children->push_back(child);
   _push(child.children, word.substr(1));
 }
 
 void Trie::push(string word) {
-  // Add this word to the list first (copy it just in case).
-  this->words.push_back(string(word));
-  this->length++;
-
   // Appends "\1" to the string to mark its end within the trie.
   _push(this->roots, word + "\1");
-}
-
-TrieNodeList::TrieNodeList() {
-  this->capacity = DEFAULT_CAPACITY;
-  this->length = 0;
-
-  this->nodes = (TrieNode *)malloc(this->capacity * sizeof(TrieNode));
-}
-
-TrieNodeList::TrieNodeList(int capacity) {
-  this->capacity = capacity;
-  this->length = 0;
-
-  this->nodes = (TrieNode *)malloc(this->capacity * sizeof(TrieNode));
-}
-
-bool TrieNodeList::isEmpty() { return this->length == 0; }
-
-int TrieNodeList::getLength() { return this->length; }
-
-void TrieNodeList::push(TrieNode node) {
-  if (this->length == this->capacity) {
-    this->grow();
-  }
-
-  this->nodes[this->length] = node;
-  this->length++;
-}
-
-TrieNode TrieNodeList::get(int i) { return this->nodes[i]; }
-
-void TrieNodeList::debug() {
-  for (int i = 0; i < this->length; i++) {
-    cout << this->nodes[i].value << endl;
-  }
-}
-
-void TrieNodeList::grow() {
-  int capacity = this->capacity * 2;
-  TrieNode *nodes = (TrieNode *)malloc(capacity * sizeof(TrieNode));
-
-  for (int i = 0; i < capacity; i++) {
-    nodes[i] = this->nodes[i];
-  }
-
-  free(this->nodes);
-  this->capacity = capacity;
-  this->nodes = nodes;
 }

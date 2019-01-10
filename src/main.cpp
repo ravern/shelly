@@ -33,6 +33,7 @@ void printMainMenu() {
   cout << " [2] Spell check a file" << endl;
   cout << " [3] Add a new word" << endl;
   cout << " [4] Save dictionary to file" << endl;
+  cout << " [5] Words that start with letter" << endl;
   cout << " [0] Exit" << endl;
   cout << endl;
 }
@@ -150,6 +151,12 @@ int main() {
         return 1;
       }
       break;
+    case 5: {
+      vector<string> words = dict->getWords();
+      for (int i = 0; i < words.size(); i++) {
+        cout << words[i] << endl;
+      }
+    } break;
     default:
       return 0;
     }
