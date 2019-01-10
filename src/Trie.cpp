@@ -6,15 +6,22 @@ using namespace std;
 
 Trie::Trie() { this->roots = new vector<TrieNode>(); }
 
-vector<string> _getWords(vector<TrieNode> *children) {
+// TODO: The prefix thing is still a little awkward, figure out a better API.
+vector<string> _getWords(vector<TrieNode> *children, char prefix) {
   vector<string> words;
 
   for (int i = 0; i < children->size(); i++) {
     TrieNode child = (*children)[i];
 
     // Skip the endings.
-    if (child.value == '\1') {
-      continue;
+    if (prefix == '\1') {
+      if (child.value == '\1') {
+        continue;
+      }
+    } else {
+      if (child.value != prefix) {
+        continue;
+      }
     }
 
     // If the child has a child that is an ending, add itself to the list.
@@ -26,7 +33,7 @@ vector<string> _getWords(vector<TrieNode> *children) {
     }
 
     // Also add all of the child words.
-    vector<string> childWords = _getWords(child.children);
+    vector<string> childWords = _getWords(child.children, '\1');
     for (int j = 0; j < childWords.size(); j++) {
       string childWord = childWords[j];
       words.push_back(child.value + childWord);
@@ -36,8 +43,10 @@ vector<string> _getWords(vector<TrieNode> *children) {
   return words;
 }
 
-vector<string> Trie::getWords() {
-  vector<string> words = _getWords(this->roots);
+vector<string> Trie::getWords() { return this->getWords('\1'); }
+
+vector<string> Trie::getWords(char prefix) {
+  vector<string> words = _getWords(this->roots, prefix);
   for (int i = 0; i < words.size(); i++) {
     words[i] = words[i].substr(0, words[i].length() - 1);
   }

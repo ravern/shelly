@@ -115,6 +115,23 @@ bool saveDictToFile(Trie *dict) {
   return true;
 }
 
+void printWordsWithPrefix(Trie *dict) {
+  cout << "Enter the first letter: ";
+
+  char prefix;
+  cin >> prefix;
+
+  cout << "Finding words..." << endl;
+
+  // Output each word to the screen.
+  vector<string> words = dict->getWords(prefix);
+  for (int i = 0; i < words.size(); i++) {
+    cout << words[i] << endl;
+  }
+
+  cout << endl;
+}
+
 int main() {
   Trie *dict = new Trie();
 
@@ -151,12 +168,9 @@ int main() {
         return 1;
       }
       break;
-    case 5: {
-      vector<string> words = dict->getWords();
-      for (int i = 0; i < words.size(); i++) {
-        cout << words[i] << endl;
-      }
-    } break;
+    case 5:
+      printWordsWithPrefix(dict);
+      break;
     default:
       return 0;
     }

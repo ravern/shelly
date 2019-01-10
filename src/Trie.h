@@ -21,6 +21,9 @@ public:
   // Returns the list of words in the trie.
   vector<string> getWords();
 
+  // Returns all the words within the trie with the given character prefix.
+  vector<string> getWords(char prefix);
+
   // Finds the word within the trie, only returning true if the exact word
   // had been added into the trie.
   bool find(string word);
