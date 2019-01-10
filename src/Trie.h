@@ -13,7 +13,7 @@ struct TrieNode {
 struct TrieResult {
   bool found;
   bool subError;
-  bool delError;
+  bool addError;
 };
 
 // Represents a simple trie which stores words.

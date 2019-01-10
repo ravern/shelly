@@ -61,7 +61,7 @@ TrieResult _findWithError(vector<TrieNode> *children, string word,
     TrieResult result;
     result.found = true;
     result.subError = subError;
-    result.delError = false;
+    result.addError = false;
     return result;
   }
 
@@ -75,7 +75,7 @@ TrieResult _findWithError(vector<TrieNode> *children, string word,
         return result;
       }
     } else {
-      if (!subError) {
+      if (!subError && word[0] != SPECIAL_CHAR) {
         TrieResult result =
             _findWithError(child.children, word.substr(1), true);
         if (result.found) {
@@ -88,7 +88,7 @@ TrieResult _findWithError(vector<TrieNode> *children, string word,
   TrieResult result;
   result.found = false;
   result.subError = subError;
-  result.delError = false;
+  result.addError = false;
   return result;
 }
 
@@ -107,7 +107,7 @@ TrieResult Trie::findWithError(string word) {
         _findWithError(this->roots, wordCopy + SPECIAL_CHAR, false);
     if (result.found) {
       result.subError = false;
-      result.delError = true;
+      result.addError = true;
       return result;
     }
   }
