@@ -34,6 +34,7 @@ void printMainMenu() {
   cout << " [3] Add a new word" << endl;
   cout << " [4] Save dictionary to file" << endl;
   cout << " [5] Words that start with letter" << endl;
+  cout << " [6] Spell check a word (allow errors)" << endl;
   cout << " [0] Exit" << endl;
   cout << endl;
 }
@@ -132,6 +133,27 @@ void printWordsWithPrefix(Trie *dict) {
   cout << endl;
 }
 
+// Spell checks a single word.
+void spellCheckWordWithError(Trie *dict) {
+  cout << "Enter your word: ";
+
+  string word;
+  cin >> word;
+
+  TrieResult result = dict->findWithError(word);
+
+  if (result.found) {
+    cout << "Your word is spelled correctly!" << endl;
+    if (result.subError) {
+      cout << "Your word had a substitution error >:(" << endl;
+    }
+  } else {
+    cout << "Your word is spelled wrongly!" << endl;
+  }
+
+  cout << endl;
+}
+
 int main() {
   Trie *dict = new Trie();
 
@@ -170,6 +192,9 @@ int main() {
       break;
     case 5:
       printWordsWithPrefix(dict);
+      break;
+    case 6:
+      spellCheckWordWithError(dict);
       break;
     default:
       return 0;

@@ -4,6 +4,8 @@
 
 using namespace std;
 
+#define SPECIAL_CHAR '\1'
+
 Trie::Trie() { this->roots = new vector<TrieNode>(); }
 
 // TODO: The prefix thing is still a little awkward, figure out a better API.
@@ -14,8 +16,8 @@ vector<string> _getWords(vector<TrieNode> *children, char prefix) {
     TrieNode child = (*children)[i];
 
     // Skip the endings.
-    if (prefix == '\1') {
-      if (child.value == '\1') {
+    if (prefix == SPECIAL_CHAR) {
+      if (child.value == SPECIAL_CHAR) {
         continue;
       }
     } else {
@@ -26,14 +28,14 @@ vector<string> _getWords(vector<TrieNode> *children, char prefix) {
 
     // If the child has a child that is an ending, add itself to the list.
     for (int j = 0; j < child.children->size(); j++) {
-      if ((*child.children)[j].value == '\1') {
+      if ((*child.children)[j].value == SPECIAL_CHAR) {
         string word = "";
         words.push_back(child.value + word);
       }
     }
 
     // Also add all of the child words.
-    vector<string> childWords = _getWords(child.children, '\1');
+    vector<string> childWords = _getWords(child.children, SPECIAL_CHAR);
     for (int j = 0; j < childWords.size(); j++) {
       string childWord = childWords[j];
       words.push_back(child.value + childWord);
@@ -43,7 +45,7 @@ vector<string> _getWords(vector<TrieNode> *children, char prefix) {
   return words;
 }
 
-vector<string> Trie::getWords() { return this->getWords('\1'); }
+vector<string> Trie::getWords() { return this->getWords(SPECIAL_CHAR); }
 
 vector<string> Trie::getWords(char prefix) {
   vector<string> words = _getWords(this->roots, prefix);
@@ -51,6 +53,46 @@ vector<string> Trie::getWords(char prefix) {
     words[i] = words[i].substr(0, words[i].length() - 1);
   }
   return words;
+}
+
+TrieResult _findWithError(vector<TrieNode> *children, string word,
+                          bool subError) {
+  if (word.empty()) {
+    TrieResult result;
+    result.found = true;
+    result.subError = subError;
+    return result;
+  }
+
+  for (int i = 0; i < children->size(); i++) {
+    TrieNode child = (*children)[i];
+
+    if (word[0] == child.value) {
+      TrieResult result = _findWithError(child.children, word.substr(1), false);
+      if (result.found) {
+        result.subError = result.subError || subError;
+        return result;
+      }
+    } else {
+      if (!subError) {
+        TrieResult result =
+            _findWithError(child.children, word.substr(1), true);
+        if (result.found) {
+          return result;
+        }
+      }
+    }
+  }
+
+  TrieResult result;
+  result.found = false;
+  result.subError = subError;
+  return result;
+}
+
+TrieResult Trie::findWithError(string word) {
+  // Appends the special char to the string to mark its end within the trie.
+  return _findWithError(this->roots, word + SPECIAL_CHAR, false);
 }
 
 bool _find(vector<TrieNode> *children, string word) {
@@ -69,8 +111,8 @@ bool _find(vector<TrieNode> *children, string word) {
 }
 
 bool Trie::find(string word) {
-  // Appends "\1" to the string to mark its end within the trie.
-  return _find(this->roots, word + "\1");
+  // Appends the special char to the string to mark its end within the trie.
+  return _find(this->roots, word + SPECIAL_CHAR);
 }
 
 void _push(vector<TrieNode> *children, string word) {
@@ -94,6 +136,6 @@ void _push(vector<TrieNode> *children, string word) {
 }
 
 void Trie::push(string word) {
-  // Appends "\1" to the string to mark its end within the trie.
-  _push(this->roots, word + "\1");
+  // Appends the special char to the string to mark its end within the trie.
+  _push(this->roots, word + SPECIAL_CHAR);
 }
