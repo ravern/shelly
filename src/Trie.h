@@ -14,6 +14,9 @@ public:
   // Creates an empty trie.
   Trie();
 
+  // Returns the number of words in the trie.
+  int getLength();
+
   // Finds the word within the trie, only returning true if the exact word
   // had been added into the trie.
   bool find(string word);
@@ -25,6 +28,7 @@ public:
   void debug();
 
 private:
+  int length;
   TrieNodeList *roots;
 };
 
