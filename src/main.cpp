@@ -32,6 +32,7 @@ void printMainMenu() {
   cout << " [1] Spell check a word" << endl;
   cout << " [2] Spell check a file" << endl;
   cout << " [3] Add a new word" << endl;
+  cout << " [4] Save dictionary to file" << endl;
   cout << " [0] Exit" << endl;
   cout << endl;
 }
@@ -92,6 +93,27 @@ void addWord(Trie *dict) {
   cout << endl;
 }
 
+bool saveDictToFile(Trie *dict) {
+  ofstream dictionary;
+  dictionary.open("data/dictionary.txt");
+
+  if (!dictionary.is_open()) {
+    return false;
+  }
+
+  // Output each word to the file.
+  vector<string> words = dict->getWords();
+  for (int i = 0; i < words.size(); i++) {
+    dictionary << words[i];
+    if (i != words.size() - 1) {
+      dictionary << endl;
+    }
+  }
+
+  dictionary.close();
+  return true;
+}
+
 int main() {
   Trie *dict = new Trie();
 
@@ -121,6 +143,12 @@ int main() {
       break;
     case 3:
       addWord(dict);
+      break;
+    case 4:
+      if (!saveDictToFile(dict)) {
+        cout << "Error: Failed to save dictionary!" << endl;
+        return 1;
+      }
       break;
     default:
       return 0;

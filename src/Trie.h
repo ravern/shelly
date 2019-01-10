@@ -1,4 +1,5 @@
 #include <string>
+#include <vector>
 
 using namespace std;
 
@@ -17,6 +18,9 @@ public:
   // Returns the number of words in the trie.
   int getLength();
 
+  // Returns the list of words in the trie.
+  vector<string> getWords();
+
   // Finds the word within the trie, only returning true if the exact word
   // had been added into the trie.
   bool find(string word);
@@ -29,6 +33,7 @@ public:
 
 private:
   int length;
+  vector<string> words;
   TrieNodeList *roots;
 };
 

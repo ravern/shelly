@@ -10,6 +10,8 @@ Trie::Trie() { this->roots = new TrieNodeList(26); }
 
 int Trie::getLength() { return this->length; }
 
+vector<string> Trie::getWords() { return this->words; }
+
 bool _find(TrieNodeList *children, string word) {
   if (word.empty()) {
     return true;
@@ -51,9 +53,12 @@ void _push(TrieNodeList *children, string word) {
 }
 
 void Trie::push(string word) {
+  // Add this word to the list first (copy it just in case).
+  this->words.push_back(string(word));
+  this->length++;
+
   // Appends "\1" to the string to mark its end within the trie.
   _push(this->roots, word + "\1");
-  this->length++;
 }
 
 TrieNodeList::TrieNodeList() {
