@@ -147,6 +147,9 @@ void spellCheckWordWithError(Trie *dict) {
     if (result.subError) {
       cout << "Your word had a substitution error >:(" << endl;
     }
+    if (result.delError) {
+      cout << "Your word had a deletion error >:(" << endl;
+    }
   } else {
     cout << "Your word is spelled wrongly!" << endl;
   }

@@ -61,6 +61,7 @@ TrieResult _findWithError(vector<TrieNode> *children, string word,
     TrieResult result;
     result.found = true;
     result.subError = subError;
+    result.delError = false;
     return result;
   }
 
@@ -68,9 +69,9 @@ TrieResult _findWithError(vector<TrieNode> *children, string word,
     TrieNode child = (*children)[i];
 
     if (word[0] == child.value) {
-      TrieResult result = _findWithError(child.children, word.substr(1), false);
+      TrieResult result =
+          _findWithError(child.children, word.substr(1), subError);
       if (result.found) {
-        result.subError = result.subError || subError;
         return result;
       }
     } else {
@@ -87,12 +88,31 @@ TrieResult _findWithError(vector<TrieNode> *children, string word,
   TrieResult result;
   result.found = false;
   result.subError = subError;
+  result.delError = false;
   return result;
 }
 
 TrieResult Trie::findWithError(string word) {
   // Appends the special char to the string to mark its end within the trie.
-  return _findWithError(this->roots, word + SPECIAL_CHAR, false);
+  TrieResult result = _findWithError(this->roots, word + SPECIAL_CHAR, false);
+  if (result.found) {
+    return result;
+  }
+
+  for (int i = 0; i < word.length(); i++) {
+    string wordCopy = string(word);
+    wordCopy.erase(i, i + 1);
+
+    TrieResult result =
+        _findWithError(this->roots, wordCopy + SPECIAL_CHAR, false);
+    if (result.found) {
+      result.subError = false;
+      result.delError = true;
+      return result;
+    }
+  }
+
+  return result;
 }
 
 bool _find(vector<TrieNode> *children, string word) {
