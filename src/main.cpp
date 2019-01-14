@@ -143,12 +143,12 @@ void spellCheckWordWithError(Trie *dict) {
   TrieResult result = dict->findWithError(word);
 
   if (result.found) {
-    cout << "Your word is spelled correctly!" << endl;
     if (result.subError) {
       cout << "Your word had a substitution error >:(" << endl;
-    }
-    if (result.addError) {
+    } else if (result.addError) {
       cout << "Your word had an addition error >:(" << endl;
+    } else {
+      cout << "Your word is spelled correctly!" << endl;
     }
   } else {
     cout << "Your word is spelled wrongly!" << endl;
