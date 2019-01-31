@@ -50,7 +50,7 @@ vector<string> Trie::getWords() { return this->getWords(SPECIAL_CHAR); }
 vector<string> Trie::getWords(char prefix) {
   vector<string> words = _getWords(this->roots, prefix);
   for (int i = 0; i < words.size(); i++) {
-    words[i] = words[i].substr(0, words[i].length() - 1);
+    words[i] = words[i].substr(0, words[i].length());
   }
   return words;
 }
