@@ -48,11 +48,7 @@ vector<string> _getWords(vector<TrieNode> *children, char prefix) {
 vector<string> Trie::getWords() { return this->getWords(SPECIAL_CHAR); }
 
 vector<string> Trie::getWords(char prefix) {
-  vector<string> words = _getWords(this->roots, prefix);
-  for (int i = 0; i < words.size(); i++) {
-    words[i] = words[i].substr(0, words[i].length());
-  }
-  return words;
+  return _getWords(this->roots, prefix);
 }
 
 TrieResult _findWithError(vector<TrieNode> *children, string word,
