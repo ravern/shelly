@@ -1,7 +1,7 @@
-john
-mary
-jane
-peter
-sean
-jerry
-thomas
+joh
+jan
+jerr
+mar
+pete
+sea
+thoma

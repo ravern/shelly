@@ -41,9 +41,6 @@ public:
   // Adds a new word into the trie.
   void push(string word);
 
-  // Outputs debug information about the trie.
-  void debug();
-
 private:
   vector<TrieNode> *roots;
 };
